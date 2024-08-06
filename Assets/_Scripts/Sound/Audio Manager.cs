@@ -13,12 +13,20 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1.0f);
+        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
+
+        SetMusicVolume(musicVolume);
+        SetSFXVolume(sfxVolume);
     }
 
     public void PlayMusic(string name)
@@ -38,5 +46,15 @@ public class AudioManager : MonoBehaviour
         if (sound == null) return;
 
         SFXSource.PlayOneShot(sound.Clip);
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        MusicSource.volume = volume;
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        SFXSource.volume = volume;
     }
 }

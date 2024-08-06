@@ -91,13 +91,13 @@ public class PlayerAttack : MonoBehaviour
 
         Animator.SetTrigger("TrAttack");
 
-        HitDelayTimer = 0.2f;
+        HitDelayTimer = 0.05f;
     }
 
     private IEnumerator HitBoxRoutine()
     {
-        float activeAmount = 0.05f;
-        if (AttackCooldown < 0.05f)
+        float activeAmount = 0.4f;
+        if (AttackCooldown < 0.4f)
             activeAmount = AttackCooldown;
 
         AttackHitbox.gameObject.SetActive(true);

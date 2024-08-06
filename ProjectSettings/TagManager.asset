@@ -20,8 +20,8 @@ TagManager:
   - IsBarrier
   - IsHand
   - IsSpike
-  - 
-  - 
+  - IsNfp
+  - IsPortal
   - 
   - 
   - 

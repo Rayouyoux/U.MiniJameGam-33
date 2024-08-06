@@ -5,17 +5,20 @@ using UnityEngine;
 public class Hand : MonoBehaviour
 {
     private Animator _animator;
-    private PlayerHealth _playerHealth;
+    public PlayerHealth PlayerHealth;
 
+    private float _offset;
     private bool _hasPlayedSound;
 
     private void Start()
     {
         _animator = GetComponent<Animator>();
+        _offset = (transform.position - PlayerHealth.transform.position).y;
     }
 
     private void Update()
     {
+        FollowPlayerY();
         AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
 
         if (!stateInfo.IsName("Attack")) return;
@@ -28,9 +31,9 @@ public class Hand : MonoBehaviour
         }
 
         if (stateInfo.normalizedTime < 0.9f) return;
-        if (_playerHealth == null) return;
+        if (PlayerHealth == null) return;
 
-        _playerHealth.Die();
+        PlayerHealth.Die();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -43,9 +46,14 @@ public class Hand : MonoBehaviour
 
             PlayerHealth playerHealth = collision.GetComponentInParent<PlayerHealth>();
 
-            _playerHealth = playerHealth;
+            PlayerHealth = playerHealth;
 
             _animator.SetTrigger("TrAttack");
         }
+    }
+
+    public void FollowPlayerY()
+    {
+        transform.position = new Vector2(transform.position.x, PlayerHealth.transform.position.y + _offset);
     }
 }

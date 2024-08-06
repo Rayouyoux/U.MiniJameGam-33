@@ -22,7 +22,7 @@ public class Spikes : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-
+        if (Hitbox == null) return;
         if (collision.gameObject != Hitbox.gameObject) return;
 
         PlayerHealth playerHealth = Hitbox.gameObject.GetComponentInParent<PlayerHealth>();

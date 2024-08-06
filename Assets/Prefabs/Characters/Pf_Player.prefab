@@ -255,10 +255,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 1600
+    m_Bits: 17984
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 439
+    m_Bits: 14775
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -327,12 +327,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 925e00b8ccbb39944b91ce97caa21049, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 8
+  _speed: 6
   _jumpPower: 16
   _groundCheck: {fileID: 5797890639891710472}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  _coyoteTimeDuration: 0.1
 --- !u!114 &7321805608381500976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,10 +346,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cdf0a91eb076ca4ab08c4ee5b92ebd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 50
-  _damageReduction: 0
+  _maxHealth: 100
+  _damageReduction: 0.992
   _invulnerabilityDuration: 1
-  _mainCamera: {fileID: 0}
 --- !u!114 &7663317125113065929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,7 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e982394f11fc2f4892c9beae7eee8b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackDamage: 20
+  _attackDamage: 1000
   _attackHitbox: {fileID: 1671443944344381189}
   _attackCooldown: 0.5
   _attackCollider: {fileID: 7847912458325496741}
@@ -377,6 +377,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a16b64faad6e0429a164d7ca5369dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RedGlasses: {fileID: 1726015161351303552}
+  BlueGlasses: {fileID: 828771194296080567}
+  WearingTime: 1
+  SwitchingTime: 0
 --- !u!1 &2777322347529935248
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +429,7 @@ BoxCollider2D:
     m_Bits: 6400
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 759
+    m_Bits: 8951
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

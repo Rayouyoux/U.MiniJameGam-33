@@ -10,11 +10,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _jumpPower = 16f;
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private float _coyoteTimeDuration = 0.2f; 
 
     private float _horizontal;
     private bool _isFacingRight = true;
     private Rigidbody2D _rb;
     private Animator _animator;
+    private float _coyoteTime; 
 
     #endregion
 
@@ -46,7 +48,16 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.LockedControls)
             _horizontal = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetButtonDown("Jump") && IsGrounded() && !GameManager.LockedControls)
+        if (IsGrounded())
+        {
+            _coyoteTime = _coyoteTimeDuration;
+        }
+        else
+        {
+            _coyoteTime -= Time.deltaTime; 
+        }
+
+        if (Input.GetButtonDown("Jump") && (_coyoteTime > 0) && !GameManager.LockedControls)
         {
             AudioManager.Instance.PlaySFX("Jump");
             Rb.velocity = new Vector2(Rb.velocity.x, JumpPower);
@@ -58,7 +69,6 @@ public class PlayerController : MonoBehaviour
         }
 
         Flip();
-        
     }
 
     private void FixedUpdate()
@@ -68,7 +78,12 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(GroundCheck.position, 0.2f, GroundLayer);
+        Vector2 boxCastSize = new Vector2(0.5f, 0.1f);
+
+        // Perform the box cast
+        RaycastHit2D hit = Physics2D.BoxCast(GroundCheck.position, boxCastSize, 0f, Vector2.down, 0.1f, GroundLayer);
+
+        return hit.collider != null;
     }
 
     private void Flip()

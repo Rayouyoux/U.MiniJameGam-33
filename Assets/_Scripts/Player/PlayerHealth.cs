@@ -20,7 +20,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private float _invulnerabilityTimer;
 
     // Other
-    [SerializeField] private CameraMovement _mainCamera;
     private DamageFlash _damageFlashScript;
     private Animator _animator;
 
@@ -28,16 +27,20 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     #region PROPERTIES
 
+    // Health
     public float MaxHealth { get => _maxHealth; set => _maxHealth = value; }
     public float DamageReduction { get => _damageReduction; set => _damageReduction = value; }
     public float InvulnerabilityDuration { get => _invulnerabilityDuration; set => _invulnerabilityDuration = value; }
     public bool IsAlive { get => _isAlive; set => _isAlive = value; }
+
+    // Invulnerability
     public float CurrentHealth { get => _currentHealth; set => _currentHealth = value; }
     public bool IsInvulnerable { get => _isInvulnerable; set => _isInvulnerable = value; }
     public int ActiveCollisions { get => _activeCollisions; set => _activeCollisions = value; }
     public List<float> CurrentCollisions { get => _currentCollisions; set => _currentCollisions = value; }
     public float InvulnerabilityTimer { get => _invulnerabilityTimer; set => _invulnerabilityTimer = value; }
-    public CameraMovement MainCamera { get => _mainCamera; set => _mainCamera = value; }
+
+    // Other
     public DamageFlash DamageFlashScript { get => _damageFlashScript; set => _damageFlashScript = value; }
     public Animator Animator { get => _animator; set => _animator = value; }
 
@@ -110,17 +113,13 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public void Die()
     {
         GetComponentInChildren<PlayerHitbox>().gameObject.GetComponent<Collider2D>().enabled = false;
+        GetComponent<PlayerVision>().StopGlasses = true;
 
-        MainCamera.MoveCamera = false;
+        GameManager.IsScrolling = false;
         GameManager.LockedControls = true;
-        GetComponent<PlayerController>().Rb.constraints = RigidbodyConstraints2D.FreezePosition;
+        GetComponent<PlayerController>().Rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
         Animator.SetTrigger("TrDying");
-    }
-
-    public void ToggleAlive()
-    {
-        IsAlive = false;
     }
 
     #endregion

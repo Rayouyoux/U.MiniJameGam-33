@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamageable
@@ -8,7 +9,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     [Header("Movement")]
     [SerializeField] private float _speed = 2f;
-    private bool _isFacingRight;
+    private Rigidbody2D _rb;
+    private bool _isFacingRight = false;
+    private Vector2 _moveDirection = Vector2.left;
 
     [Header("Health & Damage")]
     [SerializeField] private float _maxHealth = 100f;
@@ -17,7 +20,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private float _currentHealth;
     private bool _isAlive = true;
 
-    [Header("Invulnearbility")]
+    [Header("Invulnerability")]
     [SerializeField] private PlayerHitbox _playerHitbox;
     [SerializeField] private float _invulnerabilityDuration = 2f;
     private bool _isInvulnerable = false;
@@ -33,7 +36,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     // Movement
     public float Speed { get => _speed; set => _speed = value; }
+    public Rigidbody2D Rb { get => _rb; set => _rb = value; }
     public bool IsFacingRight { get => _isFacingRight; set => _isFacingRight = value; }
+    public Vector2 MoveDirection { get => _moveDirection; set => _moveDirection = value; }
 
     // Health & Damage
     public float MaxHealth { get => _maxHealth; set => _maxHealth = value; }
@@ -59,6 +64,7 @@ public class Enemy : MonoBehaviour, IDamageable
     // Initialization and update logic
     void Start()
     {
+        Rb = GetComponent<Rigidbody2D>();
         DamageFlashScript = GetComponent<DamageFlash>();
         CurrentHealth = MaxHealth;
         InvulnerabilityTimer = 0;
@@ -102,7 +108,17 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void Move()
     {
-        
+        Animator.SetTrigger("TrStarted");
+        Rb.velocity = new Vector2(MoveDirection.x * Speed, Rb.velocity.y);
+    }
+
+    private void Flip()
+    {
+        IsFacingRight = !IsFacingRight;
+        MoveDirection = IsFacingRight ? Vector2.right : Vector2.left;
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1f;
+        transform.localScale = localScale;
     }
 
     #endregion
@@ -124,12 +140,22 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (PlayerHitbox == null) return;
         if (collision.gameObject != PlayerHitbox.gameObject) return;
 
         PlayerHealth playerHealth = PlayerHitbox.gameObject.GetComponentInParent<PlayerHealth>();
 
         playerHealth.ActiveCollisions -= 1;
         playerHealth.CurrentCollisions.Remove(AttackDamage);
+    }
+
+    // Handles collisions with the environment
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 13 || collision.gameObject.layer == 8)
+        {
+            Flip();
+        }
     }
 
     #endregion
@@ -163,7 +189,9 @@ public class Enemy : MonoBehaviour, IDamageable
         Collider2D collider = GetComponent<Collider2D>();
 
         collider.enabled = false;
-            
+
+        Rb.constraints = RigidbodyConstraints2D.FreezeAll;
+
         Animator.SetTrigger("TrDying");
     }
 

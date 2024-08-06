@@ -28,7 +28,7 @@ public class LooseMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         Menu.SetActive(false);
-        SceneManager.LoadScene("Level 1");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void GoToMainMenu()

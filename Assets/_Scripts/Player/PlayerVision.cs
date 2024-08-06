@@ -20,18 +20,28 @@ public class PlayerVision : MonoBehaviour
 
     private float _wearingTimer;
     private float _switchingTimer;
+    private bool _stopGlasses;
 
     public Glasses CurrentGlasses { get => _currentGlasses; set => _currentGlasses = value; }
+    public bool StopGlasses { get => _stopGlasses; set => _stopGlasses = value; }
 
     void Start()
     {
         _currentGlasses = Glasses.Blue;
         _wearingTimer = WearingTime;
+        StopGlasses = false;
     }
 
     void Update()
     {
         ApplyCurrentGlasses();
+
+        if (StopGlasses)
+        {
+            if (_currentGlasses != Glasses.None)
+                _currentGlasses = Glasses.None;
+            return;
+        }
 
         SetCurrentGlasses();
     }
